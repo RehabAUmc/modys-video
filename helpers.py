@@ -1,5 +1,7 @@
 import re
 import os
+from pathlib import Path
+
 import pandas as pd
 import numpy as np
 import scipy.signal as signal
@@ -148,4 +150,26 @@ def read_xy(number, settings, folder, suffix):
         df = normalize(df, number, df_heights)
     if settings['cutoff_on']:
         df = df[settings['cutoff']:]
+    return df
+
+
+def read_video(video_id, videos_folder):
+    """
+
+    Args:
+        video_id: id of the video (i.e. '001')
+        videos_folder: folder of the videos (i.e. 'data/data_lying_052929)
+
+    Returns:
+        pd.Dataframe of shape n_frames x n_bodyparts. Columns are multiindexed with bodyparts,
+        coords. For example, to access all 'x' coordinates do df.xs('x', axis=1, level='coords').
+    """
+    paths = [path for path in Path(videos_folder).glob('*.csv')
+             if path.name.startswith(video_id)]
+    if len(paths) == 0:
+        raise FileNotFoundError(f'Video with video_id: {video_id} not found')
+    if len(paths) > 1:
+        raise RuntimeError(f'More than 1 video with video_id {video_id} found')
+    filepath = paths[0]
+    df = pd.read_csv(filepath, index_col=0, header=[1, 2])
     return df

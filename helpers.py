@@ -67,10 +67,10 @@ def apply_filt(df, filt):
         df[b21] = signal.sosfilt(filt,df[b21])
     return df
 
-def videonr(number):
-    ''' Function used by get_heights(), the videonumbers in the heights file don't contain the preceeding zeroes, 
-        so these are added. '''
-    strnumber = str(number)
+def fix_video_id(video_id):
+    ''' Function used by get_heights(), the video_ids in the heights file don't contain the
+    preceeding zeroes, so these are added. '''
+    strnumber = str(video_id)
     if len(strnumber) == 1:
         return '00'+strnumber
     if len(strnumber) == 2:
@@ -80,7 +80,7 @@ def videonr(number):
 def get_heights(file):
     ''' Read in the heights for normalization. '''
     df_heights = pd.read_excel(file)[['videonr','Height']]
-    df_heights['videonr'] = df_heights.apply(lambda row: videonr(row['videonr']), axis=1)
+    df_heights['videonr'] = df_heights.apply(lambda row: fix_video_id(row['videonr']), axis=1)
     return df_heights
 
 def normalize(df, number, df_heights):
@@ -125,13 +125,13 @@ def get_indexes(folder):
         indexes.extend([n+' right', n+' left'])
     return indexes
 
-def read_xy(number, settings, folder, suffix):  
+def read_xy(number, settings, folder, suffix):
     ''' Read the xy file using the global settings for filter, likelihood, cutoff and normalization.
     Requires:
-      1) file number: e.g. 001
+      1) file video_id: e.g. 001
       2) settings: for reading the data
       3) folder: the data folder
-      4) suffix: the file name string following the file number
+      4) suffix: the file name string following the file video_id
     Returns:
       A DataFrame containing the xy data with their likelihoods.
     '''

@@ -1,6 +1,8 @@
+jupyter
+keras
 matplotlib
 numpy
-keras
+openpyxl
 pandas
 scikit-learn
 scipy

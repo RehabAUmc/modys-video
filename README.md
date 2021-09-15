@@ -8,6 +8,14 @@ This project contains:
     *	ai_func.py
     *	ai_models.py
     *	plotting.py
+    
+## Reading in data
+* Download all data in https://surfdrive.surf.nl/files/index.php/s/9xtLZ074DzmUB5Z to
+the /data folder in this repository. 
+* Unzip the .zip files.
+* You should have a `data/data_lying_XXXXXX` and `data/data_sitting_XXXXXX` folder with `.csv` files, 
+and a file called `data/data_Scoring_DIS_proximal_trunk_VX.X.xlsx`
+
 ## main.ipynb
 main.ipynb has the following chapters:
 *	Imports

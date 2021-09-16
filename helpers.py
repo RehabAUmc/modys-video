@@ -70,7 +70,7 @@ def apply_filt(df, filt):
     return df
 
 def fix_video_id(video_id):
-    ''' Function used by get_heights(), the video_ids in the heights file don't contain the
+    ''' Function used by get_heights(), the indexes in the heights file don't contain the
     preceeding zeroes, so these are added. '''
     strnumber = str(video_id)
     if len(strnumber) == 1:

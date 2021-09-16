@@ -153,7 +153,7 @@ def read_xy(number, settings, folder, suffix):
     return df
 
 
-def read_video(video_id, videos_folder):
+def read_video(video_id, videos_folder='../data/data_lying_052929'):
     """
 
     Args:

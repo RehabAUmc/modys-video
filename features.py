@@ -3,6 +3,8 @@ import numpy as np
 import re
 import os
 import helpers
+from statistics import get_per_part
+
 
 def get_distance(p1X, p1Y, p2X, p2Y):
     ''' Returns the distance between (p1X, p1Y) and (p2X, p2Y), used for get_dtmp() '''
@@ -37,18 +39,6 @@ def get_accelerations(df_velocities, fps):
     df_accelerations.columns = [c.replace('Speed', 'Acceleration') for c in df_velocities.columns]
     return df_accelerations
 
-def get_dtmp(df):
-    ''' Calculates the distance of each xy position to it's average, for every bodypart '''
-    df_dtmp = pd.DataFrame()
-    bodyparts = ['Ankle', 'Knee', 'Hip', 'Wrist', 'Elbow', 'Shoulder']
-    for bodypart in bodyparts:
-        mpX_right = df[bodypart.lower()+'1'].mean()
-        mpY_right = df[bodypart.lower()+'1.1'].mean()
-        mpX_left = df[bodypart.lower()+'2'].mean()
-        mpY_left = df[bodypart.lower()+'2.1'].mean()
-        df_dtmp['right dtmp '+bodypart] = df.apply(lambda row: get_distance(mpX_right,mpY_right,row[bodypart.lower()+'1'],row[bodypart.lower()+'1.1']), axis=1)
-        df_dtmp['left dtmp '+bodypart] = df.apply(lambda row: get_distance(mpX_left,mpY_left,row[bodypart.lower()+'2'],row[bodypart.lower()+'2.1']), axis=1)
-    return df_dtmp
 
 def get_dtl(df_xy):
     ''' Calculates the distance of the knee and the ankle to the line drawn from the shoulder to the hip '''
@@ -191,3 +181,21 @@ def get_features(folder, suffix, settings):
     df_accelerations = df_transform(df_accelerations, folder)
     df_nans = df_transform(df_nans, folder)
     return df_xys, df_pols, df_dtmps, df_dtls, df_angles, df_velocities, df_accelerations, df_nans
+
+
+def get_dtmp_distribution_feature(df_video, side, bodypart, statistic=np.nanmedian):
+    """
+    Get features calculated on distribution of distance of each xy position to their
+    middlepoint (i.e. average position).
+
+    Returns:
+        1 x n_features numpy array
+    """
+    side_id = '1' if side == 'right' else '2'
+    x_mean = df_video[(bodypart + side_id, 'x')].mean()
+    y_mean = df_video[(bodypart + side_id, 'y')].mean()
+    distances = df_video.apply(lambda row: get_distance(x_mean, y_mean,
+                                                        row[(bodypart + side_id, 'x')],
+                                                        row[(bodypart + side_id, 'y')]), axis=1)
+    statistics = get_per_part(distances, 10, statistic)
+    return statistics

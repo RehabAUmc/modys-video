@@ -178,8 +178,16 @@ def read_video(video_id, videos_folder):
 def read_scores(filepath: str = '../data/data_Scoring_DIS_proximal_trunk_V1.0.xlsx'):
     """
     Read scores (y)
+
+    Returns:
+        df: Scores pd.Dataframe with an assesment from a single annotator on a specific video on
+            each row. Example:
+                  video_id    ID group  T0_DIS_D_LLP_R_tA_pscore  T0_DIS_D_RLP_R_tA_pscore
+              0        001  1001     A                      0.75                      0.50
+              1        031  1001     A                      0.50                      0.75
+
     """
     df = pd.read_excel(filepath)
     df['video_id'] = df['video'].apply(fix_video_id)
-    df.replace(999, np.nan)
+    df = df.replace(999, np.nan)
     return df

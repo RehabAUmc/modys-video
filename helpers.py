@@ -181,5 +181,6 @@ def read_scores(filepath: str = '../data/data_Scoring_DIS_proximal_trunk_V1.0.xl
     """
     df = pd.read_excel(filepath)
     df['video_id'] = df['video'].apply(fix_video_id)
-    df.replace(999, np.nan)
+    df.drop(columns=['video'])
+    df = df.replace(999, np.nan)
     return df

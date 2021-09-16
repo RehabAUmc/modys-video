@@ -1,10 +1,58 @@
 from pathlib import Path
+from typing import List, Tuple
 
 import numpy as np
 from keras.utils.data_utils import Sequence
 
 from features import get_dtmp_distribution_feature
 from helpers import read_video
+
+VALID_BODYPARTS = ['ankle', 'knee', 'hip', 'wrist', 'elbow', 'shoulder', 'forehead', 'chin']
+
+
+class FeatureConfiguration:
+    def __init__(self, dmtp_bodyparts: List[str] = None, dtl_bodyparts: List[str] = None,
+                 angle_bodypart_triples: List[Tuple[str]] = None):
+        """
+        Configuration for features to use. Allowed body parts:
+            ['ankle', 'knee', 'hip', 'wrist', 'elbow', 'shoulder', 'forehead', 'chin']
+
+        Args:
+            dmtp_bodyparts: body parts for which to compute distance to middle point (dmtp)
+                features, for example: ['ankle', 'hip', 'knee']
+            dtl_bodyparts: body parts for which to compute distance to line (dtl) features,
+                for example: ['ankle', 'knee']
+            angle_bodypart_triples: a list of triples of body parts, for each triple in the list
+                the angle between the first and list bodypart is calculated with the middle body
+                part as joint. For example [('hip', 'knee', 'ankle')] will calculate 1 angle
+                between the hip and the ankle with the knee as joint.
+        """
+        if dmtp_bodyparts is None:
+            dmtp_bodyparts = []
+        self.dmtp_bodyparts = dmtp_bodyparts
+        print('Computing distance to middlepoint features on: ',
+              dmtp_bodyparts)
+
+        if dtl_bodyparts is None:
+            dtl_bodyparts = []
+        self.dtl_bodyparts = dtl_bodyparts
+        print('Computing distance to line features on: ',
+              dtl_bodyparts)
+
+        if angle_bodypart_triples is None:
+            angle_bodypart_triples = []
+        self.angle_bodypart_triples = angle_bodypart_triples
+        print('Computing angle features on: ',
+              angle_bodypart_triples)
+
+        assert all(self._is_valid_bodypart(b) for b in dmtp_bodyparts)
+        assert all(self._is_valid_bodypart(b) for b in dtl_bodyparts)
+        assert all(self._is_valid_bodypart(b) for bodyparts in angle_bodypart_triples
+                   for b in bodyparts)
+
+    @staticmethod
+    def _is_valid_bodypart(bodypart: str):
+        return bodypart in VALID_BODYPARTS
 
 
 class DataGeneratorBase(Sequence):
@@ -55,19 +103,16 @@ class RawDataGenerator(DataGeneratorBase):
 
 
 class EngineeredFeaturesDataGenerator(DataGeneratorBase):
-    def __init__(self, scores_df, batch_size=1,
-                 videos_folder='../data/data_lying_052929', bodyparts=None):
+    def __init__(self, scores_df, feature_conf: FeatureConfiguration, batch_size=1,
+                 videos_folder='../data/data_lying_052929'):
         super().__init__(scores_df, batch_size, videos_folder)
-
-        # features:
-        self.bodyparts = bodyparts if bodyparts is not None else ['ankle', 'knee', 'hip']
+        self.feature_conf = feature_conf
 
     def _generate_X(self, indexes):
         results = []
         for video_id, side in indexes:
             df_video = read_video(video_id, self.videos_folder)
             features = np.ravel([get_dtmp_distribution_feature(df_video, side, bodypart)
-                                 for bodypart in self.bodyparts])
+                                 for bodypart in self.feature_conf.dmtp_bodyparts])
             results.append(features)
         return np.stack(results)
-

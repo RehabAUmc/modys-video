@@ -70,7 +70,7 @@ def apply_filt(df, filt):
     return df
 
 def fix_video_id(video_id):
-    ''' Function used by get_heights(), the video_ids in the heights file don't contain the
+    ''' Function used by get_heights(), the indexes in the heights file don't contain the
     preceeding zeroes, so these are added. '''
     strnumber = str(video_id)
     if len(strnumber) == 1:
@@ -153,7 +153,7 @@ def read_xy(number, settings, folder, suffix):
     return df
 
 
-def read_video(video_id, videos_folder):
+def read_video(video_id, videos_folder='../data/data_lying_052929'):
     """
 
     Args:
@@ -178,6 +178,14 @@ def read_video(video_id, videos_folder):
 def read_scores(filepath: str = '../data/data_Scoring_DIS_proximal_trunk_V1.0.xlsx'):
     """
     Read scores (y)
+
+    Returns:
+        df: Scores pd.Dataframe with an assesment from a single annotator on a specific video on
+            each row. Example:
+                  video_id    ID group  T0_DIS_D_LLP_R_tA_pscore  T0_DIS_D_RLP_R_tA_pscore
+              0        001  1001     A                      0.75                      0.50
+              1        031  1001     A                      0.50                      0.75
+
     """
     df = pd.read_excel(filepath)
     df['video_id'] = df['video'].apply(fix_video_id)

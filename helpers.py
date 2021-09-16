@@ -173,3 +173,13 @@ def read_video(video_id, videos_folder):
     filepath = paths[0]
     df = pd.read_csv(filepath, index_col=0, header=[1, 2])
     return df
+
+
+def read_scores(filepath: str = '../data/data_Scoring_DIS_proximal_trunk_V1.0.xlsx'):
+    """
+    Read scores (y)
+    """
+    df = pd.read_excel(filepath)
+    df['video_id'] = df['video'].apply(fix_video_id)
+    df.replace(999, np.nan)
+    return df

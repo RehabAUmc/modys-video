@@ -28,8 +28,9 @@ def test_data_generators():
 def test_engineered_feautures_data_generator():
     scores_df = read_scores()
     scores_df = SplitScoreSelector().transform(scores_df)
-    feature_conf = FeatureConfiguration(dmtp_bodyparts=['ankle', 'hip'])
+    feature_conf = FeatureConfiguration(dmtp_bodyparts=['ankle', 'hip'],
+                                        dtl_bodyparts=['ankle', 'knee'])
     test_generator = EngineeredFeaturesDataGenerator(scores_df, feature_conf, batch_size=2)
     X, y = test_generator.__getitem__(0)
-    assert X.shape == (2, 20)  # 2 samples in batch, 2 features (ankle, hip) with 10 bins
+    assert X.shape == (2, 40)  # 2 samples in batch, 4 features with 10 bins
     assert y.shape == (2, 1)

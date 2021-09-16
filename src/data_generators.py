@@ -4,7 +4,7 @@ from typing import List, Tuple
 import numpy as np
 from keras.utils.data_utils import Sequence
 
-from features import get_dtmp_distribution_feature
+from features import get_dtmp_distribution_statistics, get_dtl_distribution_statistics
 from helpers import read_video
 
 VALID_BODYPARTS = ['ankle', 'knee', 'hip', 'wrist', 'elbow', 'shoulder', 'forehead', 'chin']
@@ -112,7 +112,14 @@ class EngineeredFeaturesDataGenerator(DataGeneratorBase):
         results = []
         for video_id, side in indexes:
             df_video = read_video(video_id, self.videos_folder)
-            features = np.ravel([get_dtmp_distribution_feature(df_video, side, bodypart)
-                                 for bodypart in self.feature_conf.dmtp_bodyparts])
+            features = self._get_features(df_video, side)
             results.append(features)
         return np.stack(results)
+
+    def _get_features(self, df_video, side):
+        features = list()
+        features += [get_dtmp_distribution_statistics(df_video, side, bodypart)
+                     for bodypart in self.feature_conf.dmtp_bodyparts]
+        features += [get_dtl_distribution_statistics(df_video, side, bodypart)
+                     for bodypart in self.feature_conf.dtl_bodyparts]
+        return np.ravel(features)

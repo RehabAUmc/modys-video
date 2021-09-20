@@ -2,13 +2,14 @@ from pathlib import Path
 from typing import List, Tuple
 
 import numpy as np
+import pandas as pd
 from keras.utils.data_utils import Sequence
 
 from features import get_dtmp_distribution_statistics, get_dtl_distribution_statistics
 from helpers import read_video
 
 VALID_BODYPARTS = ['ankle', 'knee', 'hip', 'wrist', 'elbow', 'shoulder', 'forehead', 'chin']
-
+EXPECTED_VIDEO_LEN = 501
 
 class FeatureConfiguration:
     def __init__(self, dmtp_bodyparts: List[str] = None, dtl_bodyparts: List[str] = None,
@@ -98,6 +99,9 @@ class RawDataGenerator(DataGeneratorBase):
             df_video = read_video(video_id, self.videos_folder)
             if self.drop_likelihood:
                 df_video.drop('likelihood', axis=1, level='coords')
+            # Insert empty rows in case we do not have enough frames
+            for _ in range(EXPECTED_VIDEO_LEN - len(df_video)):
+                df_video = df_video.append(pd.Series(), ignore_index=True)
             dfs.append(df_video)
         return np.stack(dfs)
 

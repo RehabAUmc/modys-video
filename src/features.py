@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from statistics import get_per_part
+from src.statistics import get_per_part
 
 
 def get_distance(p1X, p1Y, p2X, p2Y):

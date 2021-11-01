@@ -1,4 +1,4 @@
-from helpers import read_scores
+from src.helpers import read_scores
 
 
 def test_read_scores():

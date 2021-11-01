@@ -1,9 +1,9 @@
 import pytest
 
-from helpers import read_scores
 from src.data_generators import (RawDataGenerator, EngineeredFeaturesDataGenerator,
                                  FeatureConfiguration)
 from src.data_selection import MultipleScoreSelector, SplitScoreSelector
+from src.helpers import read_scores
 
 
 def test_feature_configuration():

@@ -1,6 +1,6 @@
 from src.data_selection import SplitScoreSelector
 
-from helpers import read_scores
+from src.helpers import read_scores
 
 
 def test_split_data_selector():

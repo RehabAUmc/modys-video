@@ -24,6 +24,15 @@ class ScoreSelectorBase:
             scores_df = scores_df.drop(labels=missing_ids)
         return scores_df
 
+    def _drop_nan_scored_data(self, scores_df: pd.DataFrame, scores_to_use) -> pd.DataFrame:
+        """
+        Drop rows in the data if the score is missing.
+        """
+        scores_df_na_free = scores_df.dropna(subset=scores_to_use)
+        only_na = scores_df[~scores_df.index.isin(scores_df_na_free.index)]
+        warnings.warn(f'Dropping rows {only_na.index.values} with missing score')
+        return scores_df_na_free
+    
     def transform(self, scores_df):
         raise NotImplementedError
 
@@ -69,6 +78,7 @@ class MultipleScoreSelector(ScoreSelectorBase):
         df = df[self.scores_to_use]
 
         df = self._drop_missing_video_data(df)
+        df = self._drop_nan_scored_data(df, self.scores_to_use)
         return df
 
 
@@ -120,4 +130,5 @@ class SplitScoreSelector(ScoreSelectorBase):
         df.index = df.index.set_names(['video_id', 'side'])
         df.columns = ['score']
         df = self._drop_missing_video_data(df)
+        df = self._drop_nan_scored_data(df, [self.left_score, self.right_score])
         return df

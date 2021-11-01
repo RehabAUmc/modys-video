@@ -9,4 +9,4 @@ def test_split_data_selector():
     df = selector.transform(df)
     assert len(df) == 124
     assert df.index.names == ['video_id', 'side']
-    assert df.columns == ['score']
+    assert list(df.columns) == ['score', 'ID']

@@ -70,6 +70,7 @@ def cross_validation_generator(scores_df):
     """
     group_kfold = GroupKFold(n_splits=5)
     groups = scores_df['ID']
+    scores_df = scores_df.drop(columns='ID')
     for train_indices, test_indices in group_kfold.split(scores_df, groups=groups):
         train_scores_df = scores_df.iloc[train_indices]
         test_scores_df = scores_df.iloc[test_indices]

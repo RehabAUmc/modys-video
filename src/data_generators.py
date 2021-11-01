@@ -9,7 +9,7 @@ from features import get_dtmp_distribution_statistics, get_dtl_distribution_stat
 from helpers import read_video
 
 VALID_BODYPARTS = ['ankle', 'knee', 'hip', 'wrist', 'elbow', 'shoulder', 'forehead', 'chin']
-EXPECTED_VIDEO_LEN = 501
+
 
 class FeatureConfiguration:
     def __init__(self, dmtp_bodyparts: List[str] = None, dtl_bodyparts: List[str] = None,
@@ -89,9 +89,12 @@ class DataGeneratorBase(Sequence):
 
 class RawDataGenerator(DataGeneratorBase):
     def __init__(self, scores_df, batch_size=1,
-                 videos_folder='../data/data_lying_052929', drop_likelihood=True):
+                 videos_folder='../data/data_lying_052929',
+                 drop_likelihood=True,
+                 input_sequence_len=501):
         super().__init__(scores_df, batch_size, videos_folder)
         self.drop_likelihood = drop_likelihood
+        self.input_sequence_len = input_sequence_len
 
     def _generate_X(self, indexes):
         dfs = []
@@ -99,11 +102,22 @@ class RawDataGenerator(DataGeneratorBase):
             df_video = read_video(video_id, self.videos_folder)
             if self.drop_likelihood:
                 df_video.drop('likelihood', axis=1, level='coords')
-            # Insert empty rows in case we do not have enough frames
-            for _ in range(EXPECTED_VIDEO_LEN - len(df_video)):
-                df_video = df_video.append(pd.Series(), ignore_index=True)
+            df_video = self._fix_video_len(df_video)
             dfs.append(df_video)
         return np.stack(dfs)
+
+    def _fix_video_len(self, df_video):
+        """
+        Fix video length to self.input_sequence_len number of frames. Fill with empty rows in
+        case videos are shorter.
+        """
+        df_video = df_video.head(self.input_sequence_len)
+
+        # Insert empty rows in case we do not have enough frames
+        for _ in range(self.input_sequence_len - len(df_video)):
+            df_video = df_video.append(pd.Series(), ignore_index=True)
+
+        return df_video
 
 
 class EngineeredFeaturesDataGenerator(DataGeneratorBase):

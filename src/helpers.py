@@ -6,6 +6,7 @@ import pandas as pd
 import numpy as np
 import scipy.signal as signal
 from src import features
+from src.settings import DATA_FOLDER, SCORES_DATA_FILEPATH, LYING_VIDEOS_DATA_FOLDER
 
 percs_left = []
 percs_right = []
@@ -153,7 +154,7 @@ def read_xy(number, settings, folder, suffix):
     return df
 
 
-def read_video(video_id, videos_folder='../data/data_lying_052929'):
+def read_video(video_id, videos_folder=LYING_VIDEOS_DATA_FOLDER):
     """
 
     Args:
@@ -175,7 +176,7 @@ def read_video(video_id, videos_folder='../data/data_lying_052929'):
     return df
 
 
-def read_scores(filepath: str = '../data/data_Scoring_DIS_proximal_trunk_V1.0.xlsx'):
+def read_scores(filepath: str = SCORES_DATA_FILEPATH):
     """
     Read scores (y)
 

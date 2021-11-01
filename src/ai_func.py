@@ -2,6 +2,7 @@ import random
 import math
 import numpy as np
 import matplotlib.pyplot as plt
+from sklearn.model_selection import GroupKFold
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import r2_score, mean_absolute_error
 
@@ -51,6 +52,30 @@ def scale_data(trainX, testX):
     flatTrainX = flatTrainX.reshape((trainX.shape))
     flatTestX = flatTestX.reshape((testX.shape))
     return flatTrainX, flatTestX
+
+
+def cross_validation_generator(scores_df):
+    """
+    Args:
+        scores_df: Scores pd.Dataframe with an assesment from a single annotator on a specific video on
+            each row. For cross validation use output of a ScoreSelector class (See
+            data_selection.py)
+
+    Divide all the samples in 5 folds of roughly equal sizes (if possible). The prediction
+    function is learned using 4 folds, and the fold left out is used for test.
+
+    Yields:
+        train_scores_df, test_scores_df tuples, corresponding to the subset of the scores_df that
+        belongs to the train folds or the test folds respectively.
+    """
+    group_kfold = GroupKFold(n_splits=5)
+    groups = scores_df['ID']
+    scores_df = scores_df.drop(columns='ID')
+    for train_indices, test_indices in group_kfold.split(scores_df, groups=groups):
+        train_scores_df = scores_df.iloc[train_indices]
+        test_scores_df = scores_df.iloc[test_indices]
+        yield train_scores_df, test_scores_df
+
 
 def LOO_single_output(data, ntrials, test_index):
     ''' Splits the data by the leaving one out method. Both legs from the same subject are always put in the same dataset. '''

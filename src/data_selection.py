@@ -3,6 +3,7 @@ import warnings
 import pandas as pd
 
 from src.helpers import read_video
+from src.settings import LYING_VIDEOS_DATA_FOLDER
 
 
 class ScoreSelectorBase:
@@ -38,8 +39,8 @@ class ScoreSelectorBase:
 
 
 class MultipleScoreSelector(ScoreSelectorBase):
-    def __init__(self, videos_folder='../data/data_lying_052929',
-                 scores_to_use=None, scorer_to_use='CO',):
+    def __init__(self, videos_folder=LYING_VIDEOS_DATA_FOLDER,
+                 scores_to_use=None, scorer_to_use='CO', ):
         """
         Select scores from 'scores' dataframe, selecting on:
          * the score names specified
@@ -71,11 +72,11 @@ class MultipleScoreSelector(ScoreSelectorBase):
 
         Returns:
             pd.Dataframe with video id as index and the different score columns (in form
-            'T0_DIS_D_RELP_R_tA_pscore')
+            'T0_DIS_D_RELP_R_tA_pscore'), also has ID column so we can group based on subject id.
         """
         df = df[df['scorer'] == self.scorer_to_use]
         df.index = df['video_id']
-        df = df[self.scores_to_use]
+        df = df[self.scores_to_use + ['ID']]
 
         df = self._drop_missing_video_data(df)
         df = self._drop_nan_scored_data(df, self.scores_to_use)
@@ -83,7 +84,7 @@ class MultipleScoreSelector(ScoreSelectorBase):
 
 
 class SplitScoreSelector(ScoreSelectorBase):
-    def __init__(self, videos_folder='../data/data_lying_052929',
+    def __init__(self, videos_folder=LYING_VIDEOS_DATA_FOLDER,
                  left_score: str = 'T0_DIS_D_LLP_R_tA_pscore',
                  right_score: str = 'T0_DIS_D_RLP_R_tA_pscore', scorer_to_use='CO'):
         """
@@ -124,11 +125,14 @@ class SplitScoreSelector(ScoreSelectorBase):
         """
         df = df[df['scorer'] == self.scorer_to_use]
         df.index = df['video_id']
+        subject_ids = df['ID']
         df = df[[self.left_score, self.right_score]]
         df = df.rename(columns={self.left_score: "left", self.right_score: "right"})
         df = pd.DataFrame(df.stack())
         df.index = df.index.set_names(['video_id', 'side'])
         df.columns = ['score']
+        # Add the ID column again, joining on 'video_id'
+        df = df.join(subject_ids)
         df = self._drop_missing_video_data(df)
         df = self._drop_nan_scored_data(df, [self.left_score, self.right_score])
         return df

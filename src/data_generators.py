@@ -7,6 +7,7 @@ from keras.utils.data_utils import Sequence
 
 from src.features import get_dtmp_distribution_statistics, get_dtl_distribution_statistics
 from src.helpers import read_video
+from src.settings import LYING_VIDEOS_DATA_FOLDER
 
 VALID_BODYPARTS = ['ankle', 'knee', 'hip', 'wrist', 'elbow', 'shoulder', 'forehead', 'chin']
 
@@ -57,9 +58,12 @@ class FeatureConfiguration:
 
 
 class DataGeneratorBase(Sequence):
-    def __init__(self, scores_df, batch_size=1,
-                 videos_folder='../data/data_lying_052929'):
+    def __init__(self, scores_df, batch_size=1, videos_folder=LYING_VIDEOS_DATA_FOLDER):
         self.batch_size = batch_size
+        # Drop 'ID' column, we needed that for grouped cross validation splits, but if we drop it
+        # we only have scores in our dataframe.
+        if 'ID' in scores_df:
+            scores_df = scores_df.drop(columns='ID')
         self.scores_df = scores_df
         self.indexes = self.scores_df.index
         self.videos_folder = videos_folder
@@ -88,8 +92,7 @@ class DataGeneratorBase(Sequence):
 
 
 class RawDataGenerator(DataGeneratorBase):
-    def __init__(self, scores_df, batch_size=1,
-                 videos_folder='../data/data_lying_052929',
+    def __init__(self, scores_df, batch_size=1, videos_folder=LYING_VIDEOS_DATA_FOLDER,
                  drop_likelihood=True,
                  input_sequence_len=501):
         super().__init__(scores_df, batch_size, videos_folder)
@@ -122,7 +125,7 @@ class RawDataGenerator(DataGeneratorBase):
 
 class EngineeredFeaturesDataGenerator(DataGeneratorBase):
     def __init__(self, scores_df, feature_conf: FeatureConfiguration, batch_size=1,
-                 videos_folder='../data/data_lying_052929'):
+                 videos_folder=LYING_VIDEOS_DATA_FOLDER):
         super().__init__(scores_df, batch_size, videos_folder)
         self.feature_conf = feature_conf
 

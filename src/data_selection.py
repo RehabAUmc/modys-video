@@ -2,7 +2,7 @@ import warnings
 
 import pandas as pd
 
-from helpers import read_video
+from src.helpers import read_video
 
 
 class ScoreSelectorBase:

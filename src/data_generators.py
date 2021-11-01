@@ -5,8 +5,8 @@ import numpy as np
 import pandas as pd
 from keras.utils.data_utils import Sequence
 
-from features import get_dtmp_distribution_statistics, get_dtl_distribution_statistics
-from helpers import read_video
+from src.features import get_dtmp_distribution_statistics, get_dtl_distribution_statistics
+from src.helpers import read_video
 
 VALID_BODYPARTS = ['ankle', 'knee', 'hip', 'wrist', 'elbow', 'shoulder', 'forehead', 'chin']
 

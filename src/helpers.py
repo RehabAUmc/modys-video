@@ -5,7 +5,7 @@ from pathlib import Path
 import pandas as pd
 import numpy as np
 import scipy.signal as signal
-import features
+from src import features
 
 percs_left = []
 percs_right = []

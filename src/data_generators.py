@@ -111,15 +111,13 @@ class RawDataGenerator(DataGeneratorBase):
 
     def _fix_video_len(self, df_video):
         """
-        Fix video length to self.input_sequence_len number of frames. Fill with empty rows in
-        case videos are shorter.
+        Fix video length to self.input_sequence_len number of frames. In case videos are
+        shorter, duplicate the existing frames until the input length is reached (i.e. the video
+        will be 'played' more than once).
         """
+        while len(df_video) < self.input_sequence_len:
+            df_video = df_video.append(df_video, ignore_index=True)
         df_video = df_video.head(self.input_sequence_len)
-
-        # Insert empty rows in case we do not have enough frames
-        for _ in range(self.input_sequence_len - len(df_video)):
-            df_video = df_video.append(pd.Series(), ignore_index=True)
-
         return df_video
 
 

@@ -91,8 +91,8 @@ class SplitScoreSelector(ScoreSelectorBase):
         Transform the 'score' dataframe into a dataframe with multiindex on video_id and side
         and the corresponding score (i.e. 'left' or 'right') as only column
         Args:
-            right_score: name of score to use for right side (i.e. ['T0_DIS_D_RLP_R_tA_pscore'])
-            left_score: name of score to use for left side (i.e. ['T0_DIS_D_RLP_R_tA_pscore'])
+            right_score: name of score to use for right side (i.e. ['D_LLP_R_tA_pscore'])
+            left_score: name of score to use for left side (i.e. ['D_LLP_R_tA_pscoree'])
             scorer_to_use: identifier of the scorer to use (i.e. 1)
         """
         super().__init__(videos_folder)

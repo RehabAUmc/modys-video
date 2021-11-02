@@ -40,19 +40,19 @@ class ScoreSelectorBase:
 
 class MultipleScoreSelector(ScoreSelectorBase):
     def __init__(self, videos_folder=LYING_VIDEOS_DATA_FOLDER,
-                 scores_to_use=None, scorer_to_use='CO', ):
+                 scores_to_use=None, scorer_to_use: int = 1, ):
         """
         Select scores from 'scores' dataframe, selecting on:
          * the score names specified
          * the scorer
 
         Args:
-            scores_to_use: list of scores to use (i.e. ['T0_DIS_D_RLP_R_tA_pscore'])
-            scorer_to_use: identifier of the scorer to use (i.e. 'CO')
+            scores_to_use: list of scores to use (i.e. ['D_LLP_R_tA_pscore'])
+            scorer_to_use: identifier of the scorer to use (i.e. 1)
         """
         super().__init__(videos_folder)
         if scores_to_use is None:
-            self.scores_to_use = ['T0_DIS_D_RLP_R_tA_pscore']
+            self.scores_to_use = ['D_LLP_R_tA_pscore']
         else:
             self.scores_to_use = scores_to_use
         self.scorer_to_use = scorer_to_use
@@ -65,14 +65,14 @@ class MultipleScoreSelector(ScoreSelectorBase):
             df: Scores pd.Dataframe with an assesment from a single annotator on a specific video on
                 each row. Example:
 
-                  video_id    ID group  T0_DIS_D_LLP_R_tA_pscore  T0_DIS_D_RLP_R_tA_pscore
-              0        001  1001     A                      0.75                      0.50
-              1        031  1001     A                      0.50                      0.75
+                  video_id    ID group  D_LLP_R_tA_pscore  D_RLP_R_tA_pscoree
+              0        001  1001     A  0.75               0.50
+              1        031  1001     A  0.50               0.75
             videos_folder: Path to the videos folder
 
         Returns:
             pd.Dataframe with video id as index and the different score columns (in form
-            'T0_DIS_D_RELP_R_tA_pscore'), also has ID column so we can group based on subject id.
+            'D_LLP_R_tA_pscore'), also has ID column so we can group based on subject id.
         """
         df = df[df['scorer'] == self.scorer_to_use]
         df.index = df['video_id']
@@ -85,15 +85,15 @@ class MultipleScoreSelector(ScoreSelectorBase):
 
 class SplitScoreSelector(ScoreSelectorBase):
     def __init__(self, videos_folder=LYING_VIDEOS_DATA_FOLDER,
-                 left_score: str = 'T0_DIS_D_LLP_R_tA_pscore',
-                 right_score: str = 'T0_DIS_D_RLP_R_tA_pscore', scorer_to_use='CO'):
+                 left_score: str = 'D_LLP_R_tA_pscore',
+                 right_score: str = 'D_RLP_R_tA_pscore', scorer_to_use=1):
         """
         Transform the 'score' dataframe into a dataframe with multiindex on video_id and side
         and the corresponding score (i.e. 'left' or 'right') as only column
         Args:
             right_score: name of score to use for right side (i.e. ['T0_DIS_D_RLP_R_tA_pscore'])
             left_score: name of score to use for left side (i.e. ['T0_DIS_D_RLP_R_tA_pscore'])
-            scorer_to_use: identifier of the scorer to use (i.e. 'CO')
+            scorer_to_use: identifier of the scorer to use (i.e. 1)
         """
         super().__init__(videos_folder)
         self.left_score = left_score
@@ -108,9 +108,9 @@ class SplitScoreSelector(ScoreSelectorBase):
             df: Scores pd.Dataframe with an assesment from a single annotator on a specific video on
                 each row. Example:
 
-                  video_id    ID group  T0_DIS_D_LLP_R_tA_pscore  T0_DIS_D_RLP_R_tA_pscore
-              0        001  1001     A                      0.75                      0.50
-              1        031  1001     A                      0.50                      0.75
+                  video_id    ID group  D_LLP_R_tA_pscore  D_RLP_R_tA_pscoree
+              0        001  1001     A  0.75               0.50
+              1        031  1001     A  0.50               0.75
 
         Returns:
             pd.Dataframe with multiindex on video_id and side and the corresponding score as only
@@ -134,5 +134,5 @@ class SplitScoreSelector(ScoreSelectorBase):
         # Add the ID column again, joining on 'video_id'
         df = df.join(subject_ids)
         df = self._drop_missing_video_data(df)
-        df = self._drop_nan_scored_data(df, [self.left_score, self.right_score])
+        df = self._drop_nan_scored_data(df, ['score'])
         return df

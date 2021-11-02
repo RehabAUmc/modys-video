@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 from keras.utils.data_utils import Sequence
 
-from src.features import get_dtmp_distribution_statistics, get_dtl_distribution_statistics
+from src.features import get_dtmp_distribution_statistics, get_dtl_distribution_statistics, get_angle_distribution_statistics
 from src.helpers import read_video
 from src.settings import LYING_VIDEOS_DATA_FOLDER
 
@@ -141,4 +141,6 @@ class EngineeredFeaturesDataGenerator(DataGeneratorBase):
                      for bodypart in self.feature_conf.dmtp_bodyparts]
         features += [get_dtl_distribution_statistics(df_video, side, bodypart)
                      for bodypart in self.feature_conf.dtl_bodyparts]
+        features += [get_angle_distribution_statistics(df_video, side, bodyparts)
+                     for bodyparts in self.feature_conf.angle_bodypart_triples]
         return np.ravel(features)

@@ -1,21 +1,29 @@
+from functools import lru_cache
+
 import numpy as np
-import pandas as pd
 
 from src.statistics import get_per_part
 
 
+@lru_cache
 def get_distance(p1X, p1Y, p2X, p2Y):
     ''' Returns the distance between (p1X, p1Y) and (p2X, p2Y), used for get_dtmp() '''
     return np.linalg.norm(np.array([p1X, p1Y])-np.array([p2X, p2Y]))
 
+
+@lru_cache
 def get_distance_to_line(p1, p2, p3):
     ''' Returns the distance between p3 and the line between p1 and p2, used for get_dtl() '''
     return np.abs(np.cross(p2-p1,p3-p1))/np.linalg.norm(p2-p1)
 
+
+@lru_cache
 def get_angle(distance1, distance2, distance3):
     ''' Returns the angle between 3 distances. '''
     return  np.arccos((np.square(distance1)+np.square(distance2)-np.square(distance3))/(2*distance1*distance2))
 
+
+@lru_cache
 def get_dtmp_distribution_statistics(df_video, side, bodypart, statistic=np.nanmedian):
     """
     Get statistics calculated on distribution of distance of each xy position to their
@@ -34,6 +42,7 @@ def get_dtmp_distribution_statistics(df_video, side, bodypart, statistic=np.nanm
     return statistics
 
 
+@lru_cache
 def get_dtl_distribution_statistics(df_video, side, bodypart, statistic=np.nanmedian):
     """
     Get statistics calculated on distribution of distance to the line drawn from the shoulder to
@@ -51,6 +60,8 @@ def get_dtl_distribution_statistics(df_video, side, bodypart, statistic=np.nanme
     statistics = get_per_part(distances, 10, statistic)
     return statistics
 
+
+@lru_cache
 def get_angle_distribution_statistics(df_video, side, bodyparts, statistic=np.nanmedian):
     """
     Get statistics calculated on distribution of the angle between three bodyparts.

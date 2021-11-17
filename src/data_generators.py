@@ -1,9 +1,11 @@
+from os import X_OK
 from pathlib import Path
 from typing import List, Tuple
 
 import numpy as np
 import pandas as pd
 from keras.utils.data_utils import Sequence
+import functools
 
 from src.features import get_dtmp_distribution_statistics, get_dtl_distribution_statistics, get_angle_distribution_statistics
 from src.helpers import read_video
@@ -93,21 +95,36 @@ class DataGeneratorBase(Sequence):
 
 class RawDataGenerator(DataGeneratorBase):
     def __init__(self, scores_df, batch_size=1, videos_folder=LYING_VIDEOS_DATA_FOLDER,
-                 drop_likelihood=True,
+                 drop_likelihood=True, scaler = None, calculate_polar = False, cutoff = 0, likelihood=0, bodyparts = ['ankle1', 'knee1', 'hip1','ankle2', 'knee2', 'hip2'],
                  input_sequence_len=501):
         super().__init__(scores_df, batch_size, videos_folder)
         self.drop_likelihood = drop_likelihood
         self.input_sequence_len = input_sequence_len
+        self.scaler = scaler
+        self.calculate_polar = calculate_polar
+        self.cutoff = cutoff
+        self.likelihood = likelihood
+        self.bodyparts = bodyparts
 
     def _generate_X(self, indexes):
         dfs = []
         for video_id in indexes:
             df_video = read_video(video_id, self.videos_folder)
+            df_video = self._apply_likelihood_filter(df_video, self.likelihood)
+            df_video = df_video[self.bodyparts]
             if self.drop_likelihood:
                 df_video.drop('likelihood', axis=1, level='coords')
             df_video = self._fix_video_len(df_video)
+            df_video = df_video[self.cutoff:]
             dfs.append(df_video)
-        return np.stack(dfs)
+        X = np.stack(dfs)
+        if self.scaler != None:
+            try:
+                self.scaler.scale_ 
+                X = self._apply_scaler(X)
+            except AttributeError:
+                X = self._fit_apply_scaler(X)
+        return X
 
     def _fix_video_len(self, df_video):
         """
@@ -120,6 +137,39 @@ class RawDataGenerator(DataGeneratorBase):
         df_video = df_video.head(self.input_sequence_len)
         return df_video
 
+    def _fit_apply_scaler(self,X):
+        cut = int(X.shape[1] / 2)
+        longX = X[:, -cut:, :]
+        longX = longX.reshape((longX.shape[0] * longX.shape[1], longX.shape[2]))
+        flatX = X.reshape((X.shape[0] * X.shape[1], X.shape[2]))
+        self.scaler.fit(longX)
+        flatX = self.scaler.transform(flatX)
+        return flatX.reshape((X.shape))
+
+    def _apply_scaler(self,X):
+        flatX = X.reshape((X.shape[0] * X.shape[1], X.shape[2]))
+        flatX = self.scaler.transform(flatX)
+        return flatX.reshape((X.shape))
+
+    def _get_scaler(self):
+        return self.scaler
+
+    def _apply_likelihood_filter(self, df_video, likelihood):
+        # when the likelihood is under the threshold, make x and y NaN
+        for b in df_video.columns.get_level_values('bodyparts').unique():
+            for ax in ['x', 'y']:
+                df_video.loc[:,(b, ax)] = df_video.apply(lambda row: np.NaN if row[b]['likelihood'] < likelihood else row[b][ax], axis=1)
+        df_video = df_video.interpolate(limit_direction='both')
+
+        # if bodypart is completely NaN, use the other side
+        TWO_SIDED_BODYPARTS = ['ankle', 'knee', 'hip', 'wrist', 'elbow', 'shoulder']
+        for b in TWO_SIDED_BODYPARTS:
+            for ax in ['x', 'y']:
+                if np.count_nonzero(~np.isnan(df_video.loc[:,(b+'1', ax)])) == 0:
+                    df_video.loc[:,(b+'1', ax)] = df_video.loc[:,(b+'2', ax)]
+                if np.count_nonzero(~np.isnan(df_video.loc[:,(b+'2', ax)])) == 0:
+                    df_video.loc[:,(b+'2', ax)] = df_video.loc[:,(b+'1', ax)]
+        return df_video
 
 class EngineeredFeaturesDataGenerator(DataGeneratorBase):
     def __init__(self, scores_df, feature_conf: FeatureConfiguration, batch_size=1,

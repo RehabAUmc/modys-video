@@ -1,13 +1,11 @@
-from os import X_OK
 from pathlib import Path
 from typing import List, Tuple
 
 import numpy as np
-import pandas as pd
 from keras.utils.data_utils import Sequence
-import functools
 
-from src.features import get_dtmp_distribution_statistics, get_dtl_distribution_statistics, get_angle_distribution_statistics
+from src.features import get_dtmp_distribution_statistics, get_dtl_distribution_statistics, \
+    get_angle_distribution_statistics
 from src.helpers import read_video
 from src.settings import LYING_VIDEOS_DATA_FOLDER
 

@@ -125,13 +125,13 @@ class RawDataGenerator(DataGeneratorBase):
         dfs = []
         for video_id in indexes:
             df_video = read_video(video_id, self.videos_folder)
-            if self.interpolation_threshold is not None:
-                df_video = self._apply_likelihood_filter(df_video, self.interpolation_threshold)
             df_video = df_video[self.bodyparts]
-            if self.drop_likelihood:
-                df_video.drop('likelihood', axis=1, level='coords')
             df_video = self._fix_video_len(df_video)
             df_video = df_video[self.cutoff:]
+            if self.interpolation_threshold is not None:
+                df_video = self._apply_likelihood_filter(df_video, self.interpolation_threshold)
+            if self.drop_likelihood:
+                df_video.drop('likelihood', axis=1, level='coords')
             dfs.append(df_video)
         X = np.stack(dfs)
         if self.scaler != None:

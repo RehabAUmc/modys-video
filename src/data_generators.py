@@ -12,7 +12,7 @@ from src.helpers import read_video
 from src.settings import LYING_VIDEOS_DATA_FOLDER
 
 VALID_BODYPARTS = ['ankle', 'knee', 'hip', 'wrist', 'elbow', 'shoulder', 'forehead', 'chin']
-
+DEFAULT_BODYPARTS_RAW_GENERATOR = ['ankle1', 'knee1', 'hip1', 'ankle2', 'knee2', 'hip2']
 
 class FeatureConfiguration:
     def __init__(self, dmtp_bodyparts: List[str] = None, dtl_bodyparts: List[str] = None,
@@ -94,25 +94,41 @@ class DataGeneratorBase(Sequence):
 
 
 class RawDataGenerator(DataGeneratorBase):
+    """
+    Data generator that yields raw coordinate data (so no handcrafted features).
+
+    Args:
+        scores_df: pd.Dataframe with video id as index and the different score columns (in form
+            'D_LLP_R_tA_pscore').
+        batch_size: number of samples per batch
+        videos_folder: folder where videos are located
+        drop_likelihood: toggles dropping the likelihood column
+        scaler: Scikitlearn skaler to apply to data
+        cutoff: cutoff this number of frames from the start
+        interpolation_threshold: If the likelihood falls below this threshold we will interpolate
+            coordinates
+        bodyparts: bodyparts to include coordinates from (in form ankle1,
+        input_sequence_len: number of frames to include (before cutting off frames from the start)
+    """
     def __init__(self, scores_df, batch_size=1, videos_folder=LYING_VIDEOS_DATA_FOLDER,
-                 drop_likelihood=True, scaler = None, calculate_polar = False, cutoff = 0,
-                 likelihood=None, bodyparts = ['ankle1', 'knee1', 'hip1','ankle2', 'knee2', 'hip2'],
+                 drop_likelihood=True, scaler=None, cutoff=0,
+                 interpolation_threshold=None,
+                 bodyparts=None,
                  input_sequence_len=501):
         super().__init__(scores_df, batch_size, videos_folder)
         self.drop_likelihood = drop_likelihood
         self.input_sequence_len = input_sequence_len
         self.scaler = scaler
-        self.calculate_polar = calculate_polar
         self.cutoff = cutoff
-        self.likelihood = likelihood
-        self.bodyparts = bodyparts
+        self.interpolation_threshold = interpolation_threshold
+        self.bodyparts = bodyparts if bodyparts is not None else DEFAULT_BODYPARTS_RAW_GENERATOR
 
     def _generate_X(self, indexes):
         dfs = []
         for video_id in indexes:
             df_video = read_video(video_id, self.videos_folder)
-            if self.likelihood is not None:
-                df_video = self._apply_likelihood_filter(df_video, self.likelihood)
+            if self.interpolation_threshold is not None:
+                df_video = self._apply_likelihood_filter(df_video, self.interpolation_threshold)
             df_video = df_video[self.bodyparts]
             if self.drop_likelihood:
                 df_video.drop('likelihood', axis=1, level='coords')

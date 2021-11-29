@@ -167,9 +167,6 @@ class RawDataGenerator(DataGeneratorBase):
         flatX = self.scaler.transform(flatX)
         return flatX.reshape((X.shape))
 
-    def _get_scaler(self):
-        return self.scaler
-
     def _apply_likelihood_filter(self, df_video, likelihood):
         # when the likelihood is under the threshold, make x and y NaN
         for b in df_video.columns.get_level_values('bodyparts').unique():
@@ -181,7 +178,7 @@ class RawDataGenerator(DataGeneratorBase):
 
         # if bodypart is completely NaN, use the other side
         TWO_SIDED_BODYPARTS = ['ankle', 'knee', 'hip', 'wrist', 'elbow', 'shoulder']
-        for b in TWO_SIDED_BODYPARTS:
+        for b in [b for b in TWO_SIDED_BODYPARTS if b+'1' in self.bodyparts]:
             for ax in ['x', 'y']:
                 if np.count_nonzero(~np.isnan(df_video.loc[:,(b+'1', ax)])) == 0:
                     df_video.loc[:,(b+'1', ax)] = df_video.loc[:,(b+'2', ax)]

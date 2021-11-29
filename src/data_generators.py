@@ -95,7 +95,8 @@ class DataGeneratorBase(Sequence):
 
 class RawDataGenerator(DataGeneratorBase):
     def __init__(self, scores_df, batch_size=1, videos_folder=LYING_VIDEOS_DATA_FOLDER,
-                 drop_likelihood=True, scaler = None, calculate_polar = False, cutoff = 0, likelihood=0, bodyparts = ['ankle1', 'knee1', 'hip1','ankle2', 'knee2', 'hip2'],
+                 drop_likelihood=True, scaler = None, calculate_polar = False, cutoff = 0,
+                 likelihood=None, bodyparts = ['ankle1', 'knee1', 'hip1','ankle2', 'knee2', 'hip2'],
                  input_sequence_len=501):
         super().__init__(scores_df, batch_size, videos_folder)
         self.drop_likelihood = drop_likelihood
@@ -110,7 +111,8 @@ class RawDataGenerator(DataGeneratorBase):
         dfs = []
         for video_id in indexes:
             df_video = read_video(video_id, self.videos_folder)
-            df_video = self._apply_likelihood_filter(df_video, self.likelihood)
+            if self.likelihood is not None:
+                df_video = self._apply_likelihood_filter(df_video, self.likelihood)
             df_video = df_video[self.bodyparts]
             if self.drop_likelihood:
                 df_video.drop('likelihood', axis=1, level='coords')
@@ -157,8 +159,10 @@ class RawDataGenerator(DataGeneratorBase):
     def _apply_likelihood_filter(self, df_video, likelihood):
         # when the likelihood is under the threshold, make x and y NaN
         for b in df_video.columns.get_level_values('bodyparts').unique():
+            likelihood_mask = df_video[b]['likelihood'] < likelihood
             for ax in ['x', 'y']:
-                df_video.loc[:,(b, ax)] = df_video.apply(lambda row: np.NaN if row[b]['likelihood'] < likelihood else row[b][ax], axis=1)
+                df_video[b, ax][likelihood_mask] = np.NaN
+
         df_video = df_video.interpolate(limit_direction='both')
 
         # if bodypart is completely NaN, use the other side

@@ -1,4 +1,5 @@
 import pytest
+from sklearn.preprocessing import StandardScaler
 
 from src.data_generators import (RawDataGenerator, EngineeredFeaturesDataGenerator,
                                  FeatureConfiguration)
@@ -19,10 +20,12 @@ def test_feature_configuration_non_valid():
 def test_data_generators():
     scores_df = read_scores()
     scores_df = MultipleScoreSelector().transform(scores_df)
-    test_generator = RawDataGenerator(scores_df, batch_size=2)
+    test_generator = RawDataGenerator(scores_df, batch_size=2,
+                                      cutoff=50, interpolation_threshold=0.7,
+                                      scaler=StandardScaler())
     for i in range(len(test_generator)):
         X, y = test_generator.__getitem__(i)
-        assert X.shape == (2, 501, 42)
+        assert X.shape == (2, 451, 18)
         assert y.shape == (2, 1)
 
 

@@ -167,6 +167,9 @@ class RawDataGenerator(DataGeneratorBase):
         flatX = self.scaler.transform(flatX)
         return flatX.reshape((X.shape))
 
+    def get_scaler(self):
+        return self.scaler
+
     def _apply_likelihood_filter(self, df_video, likelihood):
         # when the likelihood is under the threshold, make x and y NaN
         for b in df_video.columns.get_level_values('bodyparts').unique():

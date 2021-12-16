@@ -131,8 +131,9 @@ class RawDataGenerator(DataGeneratorBase):
             if self.interpolation_threshold is not None:
                 df_video = self._apply_likelihood_filter(df_video, self.interpolation_threshold)
             if self.drop_likelihood:
-                df_video.drop('likelihood', axis=1, level='coords')
+                df_video = df_video.drop('likelihood', axis=1, level='coords')
             dfs.append(df_video)
+
         X = np.stack(dfs)
         if self.scaler != None:
             try:

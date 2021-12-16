@@ -25,7 +25,7 @@ def test_data_generators():
                                       scaler=StandardScaler())
     for i in range(len(test_generator)):
         X, y = test_generator.__getitem__(i)
-        assert X.shape == (2, 451, 18)
+        assert X.shape == (2, 451, 12)
         assert y.shape == (2, 1)
 
 

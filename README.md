@@ -1,3 +1,4 @@
+[![DOI](https://zenodo.org/badge/406670176.svg)](https://zenodo.org/badge/latestdoi/406670176)
 # MODYS: Video analysis
 This project contains:
 *	1 Python Jupyter Notebook: main.ipynb

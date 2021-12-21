@@ -79,5 +79,5 @@ The steps to run main.ipynb.
 *	There are two sections here: the standard algorithms imported from scikit-learn and the models made in Keras. 
 *	These can be run in two ways: run_plot_standard/neural() to get the scores of the model and a plot. Or run_standard/neural_experiment() to run the chosen model multiple times. You provide these functions with the data, a splitting function, the settings, and the model.
 
-
-
+## Citation
+If you want to cite this software, please use the metadata in [CITATION.cff](CITATION.cff)

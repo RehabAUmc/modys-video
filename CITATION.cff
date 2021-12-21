@@ -1,0 +1,33 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: Automated video-based assessment of dyskinetic cerebral palsy
+message: Please cite this software using these metadata.
+type: software
+authors:
+  - given-names: Shankara
+    family-names: van de Ven
+    email: s.s.vandeven@amsterdamumc.nl
+    affiliation: Amsterdam UMC, Department of Rehabilitation medicine, Amsterdam Movement Sciences
+  - given-names: Sven
+    family-names: van der Burg
+    email: s.vanderburg@esciencecenter.nl
+    affiliation: Netherlands eScience Center
+    orcid: 'https://orcid.org/0000-0003-1250-6968'
+  - given-names: Florian
+    family-names: Huber
+    email: florian.huber@hs-duesseldorf.de
+    affiliation: Hochschule Düsseldorf, Netherlands eScience Center
+    orcid: 'https://orcid.org/0000-0002-3535-9406'
+  - given-names: Sonja
+    family-names: Georgievska
+    email: s.georgievska@esciencecenter.nl
+    orcid: 'https://orcid.org/0000-0002-8094-4532'
+    affiliation: Netherlands eScience Center
+  - given-names: Helga
+    family-names: Haberfehlner
+    affiliation: Amsterdam UMC, Department of Rehabilitation medicine, Amsterdam Movement Sciences; KU Leuven, Campus Brugge, Department of Rehabilitation Sciences
+    orcid: 'https://orcid.org/0000-0001-9307-4102'
+    email: h.haberfehlner@amsterdamumc.nl
+

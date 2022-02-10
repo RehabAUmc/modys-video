@@ -26,7 +26,7 @@ def continues_line(p1, p2):
     else:
         ymax = p1[1]+(p2[1]-p1[1])/(p2[0]-p1[0])*(xmax-p1[0])
         ymin = p1[1]+(p2[1]-p1[1])/(p2[0]-p1[0])*(xmin-p1[0])
-    l = mlines.Line2D([xmin,xmax], [ymin,ymax])
+    l = mlines.Line2D([xmin,xmax], [ymin,ymax], linestyle='--')
     ax.add_line(l)
     
 def plot_continues_line(df, bodypart1, bodypart2, frame=None):

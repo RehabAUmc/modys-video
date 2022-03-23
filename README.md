@@ -53,7 +53,9 @@ Results of experiments are stored as xls in the result folder
 
 ## Notebooks (visualisation)
    * experiment-2-results-visualisation.ipynb
+ Notebook includes different options for visualisation for results of experiment 2 i.e. predicted versus true scores
    * feature-visualisation.ipynb
+ Within this notebook single files (stick figure data) can be visualized 
    
 ## main.ipynb (adapt)
 main.ipynb has the following chapters:

@@ -49,6 +49,7 @@ add
    * experiment-2-different-random-forrest-models.ipynb
   
 ## Results
+Results of experiments are stored as xls in the result folder
 
 ## Notebooks (visualisation)
    * experiment-2-results-visualisation.ipynb

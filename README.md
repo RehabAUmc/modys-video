@@ -1,15 +1,18 @@
 [![DOI](https://zenodo.org/badge/406670176.svg)](https://zenodo.org/badge/latestdoi/406670176)
+
 # MODYS: Video analysis
-This project contains:
-*	1 Python Jupyter Notebook: main.ipynb
-*	6 Python code files:
-    *	helpers.py
-    *	statistics.py
-    *	features.py
-    *	ai_func.py
-    *	ai_models.py
-    *	plotting.py
-    
+
+MODYS-video provides a machine learning pipeline to train models to automatically assess dystonia and choreoathetosis of children with dyskinetic cerebral palsy using 2D coordinates of body points extracted from videos. The body coordinates are extraced using DeepLabcut (https://github.com/DeepLabCut/DeepLabCut). The clinical scoring is performed with the Dyskinesia Impairment Scale. Example data are available on zenodo.
+
+![afbeelding](https://user-images.githubusercontent.com/54277291/159797915-6d0b671d-3ae0-4571-9544-891fd0fb1579.png)
+
+## Folder structure
+* data
+* notebooks
+* results
+* scr
+* tests
+ 
 ## Reading in data
 * Download all data from https://doi.org/10.5281/zenodo.5638470 to
 the /data folder in this repository. 
@@ -17,7 +20,41 @@ the /data folder in this repository.
 * You should have a `data/data_stickfigure_coordinates_lying` and `data/data_stickfigure_coordinates_sitting` folder with `.csv` files, 
 and a file called `data/data_clinical_scoring.xlsx`
 
-## main.ipynb
+## Details Python Code Files (scr)
+*	**setting.py**
+This file contains the settings for the data
+*	**helpers.py**
+This file contains helper functions for reading in data, filtering, normalizing, etc. 
+*	**statistics.py**
+Functions for applying the different statistics.
+*	**features.py**
+Contains functions calculating features and one function reading in all the files and calculating all the features for each file.
+*	**ai_func.py**
+Functions for running the AI such as: scaling data, splitting data, running experiments, etc.
+*	**ai_models.py**
+Contains multiple Keras models.
+*	**plotting.py**
+Functions to create a stick-figure-movie from the XY-data. 
+*	**data_generators.py**
+add
+*	**data_selection.py**
+add
+
+## Notebooks (data generation)
+ * generator_based_pipeline.ipynb
+
+## Notebooks (machine learning)
+   * 1.1-model-exploration-deep-learning.ipynb
+   * 3.1-basic-deeplearning-lying.ipynb
+   * experiment-2-different-random-forrest-models.ipynb
+  
+## Results
+
+## Notebooks (visualisation)
+   * experiment-2-results-visualisation.ipynb
+   * feature-visualisation.ipynb
+   
+## main.ipynb (adapt)
 main.ipynb has the following chapters:
 *	Imports
 *	Settings
@@ -45,19 +82,6 @@ main.ipynb has the following chapters:
   *	LSTM
     *	Simple LSTM
     *	Complex LSTM
-## 6 Python Code Files
-*	**helpers.py**
-This file contains helper functions for reading in data, filtering, normalizing, etc. 
-*	**statistics.py**
-Functions for applying the different statistics.
-*	**features.py**
-Contains functions calculating features and one function reading in all the files and calculating all the features for each file.
-*	**ai_func.py**
-Functions for running the AI such as: scaling data, splitting data, running experiments, etc.
-*	**ai_models.py**
-Contains multiple Keras models.
-*	**plotting.py**
-Functions to create a stick-figure-movie from the XY-data. 
 
 ## Steps
 The steps to run main.ipynb.

@@ -23,38 +23,41 @@ and a file called `data/data_clinical_scoring.xlsx`
 ## Details Python Code Files (scr)
 *	**setting.py**
 This file contains the settings for the data
-*	**helpers.py**
+*	**helpers.py:**
 This file contains helper functions for reading in data, filtering, normalizing, etc. 
-*	**statistics.py**
+*	**statistics.py:**
 Functions for applying the different statistics.
-*	**features.py**
+*	**features.py:**
 Contains functions calculating features and one function reading in all the files and calculating all the features for each file.
-*	**ai_func.py**
+*	**ai_func.py:**
 Functions for running the AI such as: scaling data, splitting data, running experiments, etc.
-*	**ai_models.py**
+*	**ai_models.py:**
 Contains multiple Keras models.
-*	**plotting.py**
+*	**plotting.py:**
 Functions to create a stick-figure-movie from the XY-data. 
-*	**data_generators.py**
+*	**data_generators.py:**
 add
-*	**data_selection.py**
+*	**data_selection.py:**
 add
 
 ## Notebooks (data generation)
- * generator_based_pipeline.ipynb
+* **generator_based_pipeline.ipynb:**
 
 ## Notebooks (machine learning)
-   * 1.1-model-exploration-deep-learning.ipynb
-   * 3.1-basic-deeplearning-lying.ipynb
-   * experiment-2-different-random-forrest-models.ipynb
+ * **experiment-2-different-random-forrest-models.ipynb:**
+ Notebook trains random forest regressor models for different clinical outputs (dystonia: arm amplidute, arm duration, leg amplidute, leg duration)
+ * **1.1-model-exploration-deep-learning.ipynb:**
+ Notebook exploring deep learning to predict dystonia
+ * **3.1-basic-deeplearning-lying.ipynb:**
+ Notebook first step towards deeplearning 
   
 ## Results
 Results of experiments are stored as xls in the result folder
 
 ## Notebooks (visualisation)
-   * experiment-2-results-visualisation.ipynb
+* **experiment-2-results-visualisation.ipynb:**
  Notebook includes different options for visualisation for results of experiment 2 i.e. predicted versus true scores
-   * feature-visualisation.ipynb
+* **feature-visualisation.ipynb:**
  Within this notebook single files (stick figure data) can be visualized 
    
 ## main.ipynb (adapt)
@@ -86,8 +89,8 @@ main.ipynb has the following chapters:
     *	Simple LSTM
     *	Complex LSTM
 
-## Steps
-The steps to run main.ipynb.
+## Steps (adapt)
+The steps to run MODYS-video
 ### Step 1: Imports
 *	Put your required libraries in Imports
 ### Step 2: Settings

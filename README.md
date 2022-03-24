@@ -77,7 +77,7 @@ The steps to run MODYS-video
 *	 Note: The code now uses coordinates of hip, knee and ankle for the lying videos and shoulder, elbow and wrist for the sitting video. This can adaped.
 ### Step 5: Check results folder
 *	Results of predictions are stored in the result folder: scorer, true value and predicted values by model
-### Step 6: Visualisaton results
+### Step 6: Visualisation results
 *	run the experiment-2-results-visualisation.ipynb. Exmaple plots are given to show the results for expmeriment 2 (random forest regressor)
 
 ## Citation

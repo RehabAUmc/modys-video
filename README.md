@@ -36,12 +36,13 @@ Contains multiple Keras models.
 *	**plotting.py:**
 Functions to create a stick-figure-movie from the XY-data. 
 *	**data_generators.py:**
-add
+Generate data in the right input format for the experiments; 
 *	**data_selection.py:**
-add
+Read the clinical scores and match it to x,y-coordinates; drops if there is no match
 
 ## Notebooks (data generation)
 * **generator_based_pipeline.ipynb:**
+Basic data pipeline example
 
 ## Notebooks (machine learning)
  * **experiment-2-different-random-forrest-models.ipynb:**
@@ -50,9 +51,6 @@ add
  Notebook exploring deep learning to predict dystonia
  * **3.1-basic-deeplearning-lying.ipynb:**
  Notebook first step towards deeplearning 
-  
-## Results
-Results of experiments are stored as xls in the result folder
 
 ## Notebooks (visualisation)
 * **experiment-2-results-visualisation.ipynb:**
@@ -60,6 +58,12 @@ Results of experiments are stored as xls in the result folder
 * **feature-visualisation.ipynb:**
  Within this notebook single files (stick figure data) can be visualized 
    
+## Results folder
+Results of experiments are stored as xls in the result folder
+
+## Test folder
+Automatic test for code changes
+
 ## main.ipynb (adapt)
 main.ipynb has the following chapters:
 *	Imports

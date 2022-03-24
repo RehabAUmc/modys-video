@@ -44,7 +44,7 @@ Read the clinical scores and match it to x,y-coordinates; drops if there is no m
 * **generator_based_pipeline.ipynb:**
 Basic data pipeline example
 
-## Notebooks (machine learning)
+## Notebooks (machine learning experiments)
  * **experiment-2-different-random-forrest-models.ipynb:**
  Notebook trains random forest regressor models for different clinical outputs (dystonia: arm amplidute, arm duration, leg amplidute, leg duration)
  * **1.1-model-exploration-deep-learning.ipynb:**
@@ -64,55 +64,21 @@ Results of experiments are stored as xls in the result folder
 ## Test folder
 Automatic test for code changes
 
-## main.ipynb (adapt)
-main.ipynb has the following chapters:
-*	Imports
-*	Settings
-*	Get file numbers
-*	Read and store the features
-  *	Get distributions
-  *	Get statistics
-  *	Get statistics for multiple parts
-*	Get the scores
-*	AI
-  *	Standard algorithms
-    *	Get data 
-    *	Standard Linear Regression
-    *	Standard Random Forrest Regressor
-    *	Leave-One-Out cross-validation: multiple repeats
-  *	1D CNN
-    *	Get data 
-    *	Simple Version
-    *	Complex Version
-    *	Run multiple times, with shuffled data set
-  *	1D CNN with two outputs: DYS+CA
-    *	Get data
-    *	Simple CNN double output
-    *	Run multiple times, with shuffled data set
-  *	LSTM
-    *	Simple LSTM
-    *	Complex LSTM
-
-## Steps (adapt)
+## Steps to get started
 The steps to run MODYS-video
-### Step 1: Imports
-*	Put your required libraries in Imports
+### Step 1: Data
+*	Put your data in the data folder. Example data can be downloaded from https://doi.org/10.5281/zenodo.5638470 see reading in data. The notebooks can read data structured in the same way as the example data. The first 3 characters of the files contain the video number.
 ### Step 2: Settings
-*	Put the right folder and file naming convention in the first variables.
-*	Set the settings: do you want filtering, only values with a certain likelihood, a cutoff, normalization?
-### Step 3: Get file numbers
-*	The first 3 characters of the files contain the video number
-*	The scores are given for the left side and right side, so indexes are the numbers +lef/right
-### Step 4: Read and store the features
-*	In the features.py file you can add features to the get_features() function.
-*	From these features you can calculate distributions and statistics.
-### Step 5: Get the scores
-*	Read in the scores that the model must predict. 
-*	The rows should contain the indexes, while the columns are the different scores.
-### Step 6: AI
-*	You can choose which features you want in the training data and which score you like to predict under the “Get data” sections. Just give the dataframe + column of the desired input data.
-*	There are two sections here: the standard algorithms imported from scikit-learn and the models made in Keras. 
-*	These can be run in two ways: run_plot_standard/neural() to get the scores of the model and a plot. Or run_standard/neural_experiment() to run the chosen model multiple times. You provide these functions with the data, a splitting function, the settings, and the model.
+*	Put the right folder. For the example data you do not have change anything.
+### Step 3 (optional) Feature - ruwe data visualisation
+*  Run the feature-visualisation.ipynb for selected videos, to check data
+### Step 4 Run the notebooks
+*  Run the machine learning experiments notebooks
+*	 Note: The code now uses coordinates of hip, knee and ankle for the lying videos and shoulder, elbow and wrist for the sitting video. This can adaped.
+### Step 5: Check results folder
+*	Results of predictions are stored in the result folder: scorer, true value and predicted values by model
+### Step 6: Visualisaton results
+*	run the experiment-2-results-visualisation.ipynb. Exmaple plots are given to show the results for expmeriment 2 (random forest regressor)
 
 ## Citation
 If you want to cite this software, please use the metadata in [CITATION.cff](CITATION.cff)

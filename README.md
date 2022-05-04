@@ -54,7 +54,7 @@ Basic data pipeline example
 
 ## Notebooks (visualisation)
 * **scoring-visualisation.ipynb:**
-* Notebook visualize the scoring of the different scorers e.g. scorer 1 vs scorer 2; scorer 1 vs scorer 3
+ Notebook visualize the scoring of the different scorers e.g. scorer 1 vs scorer 2; scorer 1 vs scorer 3
 * **feature-visualisation.ipynb:**
  Within this notebook single files (stick figure data) can be visualized 
 * **experiment-2-results-visualisation.ipynb:**

@@ -53,10 +53,13 @@ Basic data pipeline example
  Notebook first step towards deeplearning 
 
 ## Notebooks (visualisation)
-* **experiment-2-results-visualisation.ipynb:**
- Notebook includes different options for visualisation for results of experiment 2 i.e. predicted versus true scores
+* **scoring-visualisation.ipynb:**
+* Notebook visualize the scoring of the different scorers e.g. scorer 1 vs scorer 2; scorer 1 vs scorer 3
 * **feature-visualisation.ipynb:**
  Within this notebook single files (stick figure data) can be visualized 
+* **experiment-2-results-visualisation.ipynb:**
+ Notebook includes different options for visualisation for results of experiment 2 i.e. predicted versus true scores
+
    
 ## Results folder
 Results of experiments are stored as xls in the result folder
